@@ -1,0 +1,37 @@
+def obtain_fields_bbdd(conn):
+
+    # ------------------------------ Obtener todos los campos de todas las tablas ------------------------------------------------
+    # For PostgreSQL
+    
+    '''
+    INPUTS: Connection to bbdd
+    OUTPUT: DataFrame with a column for each table and a row for each field
+    
+    '''
+    
+    campos_tablas = pd.DataFrame([e for e in range(1000)])
+    campos_tablas.columns = ['Personal_Index']
+
+    for tabla in tablas_sonar['table_name']:
+
+        query = f'''
+
+        SELECT column_name                  
+        FROM information_schema.columns   
+        WHERE table_schema = 'public'      
+        AND table_name   = '{tabla}'
+
+        '''
+
+        aux = pd.read_sql(query, conn)
+        aux.columns = [tabla]
+        locals()[tabla] = aux[tabla].to_list()
+
+        campos_tablas[tabla] = aux[tabla]
+
+
+    campos_tablas = campos_tablas.drop(['Personal_Index'], axis = 1)
+    campos_tablas = campos_tablas.dropna(how = 'all')
+    
+    return campos_tablas
+    
